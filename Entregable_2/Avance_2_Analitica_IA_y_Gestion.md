@@ -74,7 +74,7 @@ Para evitar subjetividad y cumplir con la regla de **no inventar causas personal
 | Categoría Oficial | Regla Analítica Objetiva | Benefactores | % del Total |
 | :--- | :--- | :---: | :---: |
 | **1. Permanente o recurrente** | $N_{\text{total}} \ge 4$ aportes registrados **y** $N_{2024-2026} \ge 2$ aportes en el período reciente. | **940** | **34,26 %** |
-| **2. Sin aportes recientes (requiere revisión)** | $N_{2024-2026} = 0$ (sin aportes registrados en 2024–2026; incluye inactivos históricos o registros sin pago confirmado). | **678** | **24,71 %** |
+| **2. Sin aportes recientes (requiere revisión)** | $N_{2024-2026} = 0$ (sin aportes registrados en 2024–2026). Se subdivide analíticamente en:<br>• **Con historial previo (2008–2023):** `320` benefactores ($N_{\text{total}} > 0$ pero inactivos en 2024–2026).<br>• **Sin aportes registrados en matriz:** `358` benefactores ($N_{\text{total}} = 0$; *nota metodológica: una celda vacía significa «sin aporte registrado en la hoja», no demuestra que nunca haya ocurrido un aporte*). | **678** | **24,71 %** |
 | **3. Único aporte registrado** | $N_{\text{total}} = 1$ aporte registrado en el historial y activo en el período reciente ($N_{2024-2026} = 1$). | **601** | **21,90 %** |
 | **4. Esporádico** | $2 \le N_{\text{total}} \le 3$ aportes con actividad reciente ($N_{2024-2026} \ge 1$), o $N_{\text{total}} \ge 4$ con solo $1$ aporte en 2024–2026. | **525** | **19,13 %** |
 | **Total** | **Cobertura del 100 % del padrón de benefactores** | **2.744** | **100,00 %** |
@@ -96,11 +96,21 @@ Para cada uno de los 2.744 benefactores, el sistema calcula y expone:
 
 ## 4. Cálculo de Frecuencia, Fecha del Último Aporte y Recursos de Mayor Participación (Puntos 4 y 5)
 
-### 4.1 Metodología de Fecha del Último Aporte y Frecuencia
-Dado que en las columnas `2008` a `2023` solo existe el consolidado anual, mientras que en `2024`, `2025` y `2026` existe desglose mensual (`01` a `12`), el ETL construye una fecha de referencia estandarizada para cada transacción:
-- Aportes mensuales `2024–2026`: `YYYY-MM-15` (o la fecha exacta de `ULT  PAGO` si cae en ese mismo mes/año).
-- Aportes anuales `2008–2023`: `YYYY-12-31`.
-- Si `num_aportes_registrados >= 2`, se calcula la diferencia media en meses entre aportes consecutivos (`intervalo_promedio_meses`). Si solo tiene 1 aporte, el intervalo se reporta como `N/A (Único aporte)`.
+### 4.1 Metodología de Fecha del Último Aporte, Auditoría de `ULT PAGO` y Frecuencia
+Dado que en las columnas `2008` a `2023` solo existe el consolidado anual, mientras que en `2024`, `2025` y `2026` existe desglose mensual (`01` a `12`), el ETL construye una fecha de referencia estandarizada para cada transacción y audita rigurosamente la columna `ULT  PAGO`:
+- **Auditoría de calidad sobre `ULT  PAGO` (corte `2026-11-18`):**
+  - Registros con valor no vacío en `ULT  PAGO`: **2.446** de 2.744 (298 vacíos).
+  - Fechas válidas e interpretables dentro del rango operativo (`2000-01-01` a `2026-11-18`): **2.165** (78,9 % de cobertura).
+  - Fechas en texto incompleto sin año (ej. `AGO 4,`, `SEP 30,`): **264** registros.
+  - Fechas atípicas anteriores al año 2000 (`< 2000-01-01`): **13** registros.
+  - Fechas posteriores a la fecha de corte (`> 2026-11-18`): **4** registros.
+- **Distribución de antigüedad (Recencia) sobre las 2.165 fechas válidas de `ULT  PAGO`:**
+  - `0–30 días`: **0** benefactores
+  - `31–90 días`: **516** benefactores
+  - `91–180 días`: **282** benefactores
+  - `181–365 días`: **573** benefactores
+  - `Más de 365 días`: **794** benefactores
+- **Cálculo de intervalo promedio:** Si `num_aportes_registrados >= 2`, se calcula la diferencia media en meses entre aportes consecutivos (`intervalo_promedio_meses`). Si solo tiene 1 aporte, el intervalo se reporta como `N/A (Único aporte)`.
 
 ### 4.2 Recursos de Mayor Participación (Histórico Monetario y Evidencia Multifuente)
 
