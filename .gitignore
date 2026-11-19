@@ -1,0 +1,14 @@
+# Entornos virtuales y caché de Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Artefactos temporales generados en ejecución local
+sibda_1380/
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+~$*.xlsx
