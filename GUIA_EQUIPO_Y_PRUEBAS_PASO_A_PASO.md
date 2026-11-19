@@ -128,14 +128,12 @@ print("Vista MENSAJERO (solo datos logísticos de domicilio):")
 display(consultar_vista_por_rol("MENSAJERO", limite=5))
 ```
 
-#### Prueba E: Abrir el Tablero HTML Interactivo Offline (Sin necesidad de internet ni Colab)
-También integramos y mejoramos el tablero web interactivo aportado por el compañero en:
-- **[Entregable_2/Tablero_HTML_y_Tests/resultados/dashboard.html](file:///c:/Users/JuanCamiloFonsecaMej/Documents/Trabajo%20final%20Big%20data/Entregable_2/Tablero_HTML_y_Tests/resultados/dashboard.html)**
-- **[Entregable_2/Tablero_HTML_y_Tests/resultados/informe_tecnico.html](file:///c:/Users/JuanCamiloFonsecaMej/Documents/Trabajo%20final%20Big%20data/Entregable_2/Tablero_HTML_y_Tests/resultados/informe_tecnico.html)**
-
-1. Haz doble clic sobre `dashboard.html` para abrirlo en Chrome o Edge.
-2. Filtra las gráficas por **Segmento** y **Año (2008–2026)**.
-3. En la sección **"Prototipo de programación de gestiones"**, haz clic en el botón azul **"Cargar Caso Obligatorio: 4 Hermanos (Juan, Felipe, Jesús y Daniel)"**: verás cómo el tablero agenda automáticamente a los 4 hermanos como 4 personas distintas (`Viviana`, `Sandra`, `Lina`, `Jorge`) con los recursos oficiales (`a`–`i`) y espacia sus llamadas en días consecutivos sobre el mismo teléfono compartido `TEL_FAM_HERMANOS_01`.
+#### Prueba E: Probar la Tokenización Criptográfica HMAC-SHA256 de Teléfonos en Google Colab
+```python
+# Demuestra que dos formatos distintos del mismo teléfono generan exactamente el mismo token sin revelar el número
+print("Formato 1:", generar_token_hmac_telefono("+57 310-555-8899"))
+print("Formato 2:", generar_token_hmac_telefono("573105558899"))
+```
 
 ---
 
