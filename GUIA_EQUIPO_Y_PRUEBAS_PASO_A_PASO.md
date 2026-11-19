@@ -42,12 +42,12 @@ La Fundación lleva 19 años (2008–2026) registrando a sus **2.744 benefactore
 
 ## Parte 2. Paso a Paso para Probar TODO en Google Colab
 
-### 2.1 Cómo abrir y ejecutar cualquiera de los 2 Notebooks
-1. Entra a [https://colab.research.google.com/](https://colab.research.google.com/).
-2. Haz clic en **Archivo → Subir cuaderno** (*File → Upload notebook*).
-3. Selecciona:
-   - Para probar el **Avance 1:** [Entregable_1/Avance_1_Fundacion_1380_Colab.ipynb](file:///c:/Users/JuanCamiloFonsecaMej/Documents/Trabajo%20final%20Big%20data/Entregable_1/Avance_1_Fundacion_1380_Colab.ipynb)
-   - Para probar el **Avance 2 (completo):** [Entregable_2/Avance_2_Fundacion_1380_Colab.ipynb](file:///c:/Users/JuanCamiloFonsecaMej/Documents/Trabajo%20final%20Big%20data/Entregable_2/Avance_2_Fundacion_1380_Colab.ipynb)
+### 2.1 Cómo abrir y ejecutar cualquiera de los 2 Notebooks (con 1 Clic desde GitHub)
+Ahora que el repositorio está publicado en GitHub, puedes abrir cualquiera de los cuadernos directamente en Google Colab con **un solo clic** (sin necesidad de descargar el `.ipynb`):
+- **Abrir Avance 1 en Google Colab:** [https://colab.research.google.com/github/Camilo-fonseca237/Trabajo_Final_Bigtdata/blob/main/Entregable_1/Avance_1_Fundacion_1380_Colab.ipynb](https://colab.research.google.com/github/Camilo-fonseca237/Trabajo_Final_Bigtdata/blob/main/Entregable_1/Avance_1_Fundacion_1380_Colab.ipynb)
+- **Abrir Avance 2 en Google Colab:** [https://colab.research.google.com/github/Camilo-fonseca237/Trabajo_Final_Bigtdata/blob/main/Entregable_2/Avance_2_Fundacion_1380_Colab.ipynb](https://colab.research.google.com/github/Camilo-fonseca237/Trabajo_Final_Bigtdata/blob/main/Entregable_2/Avance_2_Fundacion_1380_Colab.ipynb)
+
+*(Opcionalmente, también puedes entrar a [https://colab.research.google.com/](https://colab.research.google.com/) → **Archivo → Subir cuaderno** y seleccionar el `.ipynb` desde tu computador).*
 4. En el menú superior de Colab, haz clic en **Entorno de ejecución → Ejecutar todas** (*Runtime → Run all*).
 5. En la **Celda 2 (Carga del Excel)** aparecerá un botón **"Elegir archivos"** (*Choose Files*):
    - Selecciona el archivo [Recursos/BD_F1380_SeudonimizadaAnonimizadaencriptada.xlsx](file:///c:/Users/JuanCamiloFonsecaMej/Documents/Trabajo%20final%20Big%20data/Recursos/BD_F1380_SeudonimizadaAnonimizadaencriptada.xlsx) de tu computador.

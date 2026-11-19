@@ -6,6 +6,15 @@ Solución integral de **Big Data, Analítica de Datos e Inteligencia Artificial*
 
 ---
 
+## Abrir Directamente en Google Colab (1 Clic)
+
+| Entregable | Enlace Directo a Google Colab | Documento Técnico |
+| :--- | :--- | :--- |
+| **Entregable 1 (Avance 1)** | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Camilo-fonseca237/Trabajo_Final_Bigtdata/blob/main/Entregable_1/Avance_1_Fundacion_1380_Colab.ipynb) | [Avance_1_Formulacion_y_Arquitectura.md](./Entregable_1/Avance_1_Formulacion_y_Arquitectura.md) |
+| **Entregable 2 (Avance 2 Integrado)** | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Camilo-fonseca237/Trabajo_Final_Bigtdata/blob/main/Entregable_2/Avance_2_Fundacion_1380_Colab.ipynb) | [Avance_2_Analitica_IA_y_Gestion.md](./Entregable_2/Avance_2_Analitica_IA_y_Gestion.md) |
+
+---
+
 ## Estructura del Repositorio
 
 | Carpeta / Archivo | Descripción |
