@@ -1,0 +1,120 @@
+================================================================================
+GUION DE SUSTENTACION - AVANCE 2 (SIBDA-1380)
+================================================================================
+Proyecto    : Plataforma Analitica e Inteligente de Benefactores - Fundacion 1380
+Asignatura  : ET0155 - Fundamentos de Big Data (I.U. Pascual Bravo)
+Duracion    : 8 a 10 minutos (2 minutos por bloque + demostracion en Google Colab)
+Colab vivo  : https://colab.research.google.com/github/Camilo-fonseca237/Trabajo_Final_Bigtdata/blob/main/Entregable_2/Avance_2_Fundacion_1380_Colab.ipynb
+
+NOTA DE ORGANIZACION DEL EQUIPO:
+- Si exponen 4 personas en total, cada una toma un bloque (Persona 1, 2, 3 y 4).
+- Si exponen 5 personas en total (tu + 4 companeros), dividan el Bloque 4 asi:
+  * Persona 4: Telefonos Compartidos (Caso obligatorio de los 4 Hermanos)
+  * Persona 5: Tablero de 11 KPIs + Gobierno y Seguridad de Datos
+
+CHECKLIST PREVIO (2 MINUTOS ANTES DE EMPEZAR):
+1. Tener abierta la presentacion: Presentacion_Avance_2_Fundacion_1380.pptx
+2. Tener abierto Google Colab con todas las celdas ya ejecutadas (Entorno de ejecucion -> Ejecutar todas).
+3. Tener claro que celdas proyecta cada integrante durante su turno.
+
+--------------------------------------------------------------------------------
+BLOQUE 1 - PERSONA 1: INTRODUCCION, ETL MEJORADO Y ALMACENAMIENTO
+--------------------------------------------------------------------------------
+Diapositivas asociadas : Diapositivas 1, 2, 3 y 4
+Que mostrar en Colab   : Celdas [4], [5] y [18] (hash SHA-256, ETL y tablas DuckDB)
+
+GUION ORAL:
+"Buenos dias/tardes profesor y companeros. Para este segundo avance del proyecto de la Fundacion 1380, nos enfocamos en convertir el diagnostico del Avance 1 en una solucion analitica e inteligente completamente funcional en Google Colab.
+
+En primer lugar, perfeccionamos nuestro proceso ETL (Extraccion, Transformacion y Carga) en Python. Trabajamos siempre sobre una copia de trabajo verificada con firma criptografica SHA-256, garantizando al 100% que el Excel original de 2.744 registros y 130 columnas nunca se modifica.
+
+Al mejorar el ETL, desambiguamos los meses de 2024, 2025 y 2026, limpiamos las 97 variantes de texto en la columna SOCIO, normalizamos fechas hibridas y aplicamos expresiones regulares (Regex / NLP ligero) sobre los comentarios libres para rescatar informacion clave que antes se perdia: detectamos 530 benefactores que aportan en compania de familiares o amigos, 45 casos con restriccion explicita de no contacto y 245 con canal WhatsApp.
+
+Finalmente, transformamos esa matriz ancha en 20.804 transacciones historicas confirmadas entre 2008 y 2026, que suman COP $3.020 millones. Persistimos la informacion en un Data Lake con capas raw, bronze, silver y gold en archivos Parquet, y cargamos un Data Warehouse en DuckDB con 7 tablas en esquema estrella (dim_benefactor, dim_telemercaderista, dim_recurso, dim_tiempo, fact_aportes, fact_agenda_contactos y audit_log_etl), lo que nos permite consultar toda la base con SQL en milisegundos. Le doy paso a mi companero/a para explicar la clasificacion."
+
+DEMOSTRACION RAPIDA EN COLAB (15 seg):
+- Mostrar salida de la Celda [5] (20,804 transacciones y COP $3,020,016,428) y la Celda [18] con las 7 tablas en DuckDB.
+
+--------------------------------------------------------------------------------
+BLOQUE 2 - PERSONA 2: CLASIFICACION DE BENEFACTORES Y COMPORTAMIENTO HISTORICO
+--------------------------------------------------------------------------------
+Diapositivas asociadas : Diapositivas 5 y 6
+Que mostrar en Colab   : Celdas [7] y [8] (segmentos, auditoria ULT PAGO y ficha COD=3)
+
+GUION ORAL:
+"Gracias. Una vez tuvimos los datos limpios y modelados en nuestro Data Warehouse, desarrollamos el Modulo 3: Clasificacion y Comportamiento Historico de los Benefactores.
+
+Para cumplir con la regla de basarnos estrictamente en evidencia analitica sin inventar causas personales, implementamos reglas objetivas combinando la frecuencia historica total y la recencia en el periodo 2024-2026, obteniendo 4 segmentos claros sobre los 2.744 benefactores:
+- Permanentes o recurrentes: 940 benefactores (34,26%), con 4 o mas aportes historicos y al menos 2 aportes recientes entre 2024 y 2026. Son el nucleo que sostiene a la Fundacion.
+- Sin aportes recientes que requieren revision: 678 benefactores (24,71%), de los cuales 320 aportaron en anos anteriores (2008-2023) y 358 no tienen montos positivos registrados en la matriz; aclarando metodologicamente que una celda vacia significa 'sin aporte registrado', no prueba que nunca haya donado.
+- Con un unico aporte registrado: 601 benefactores (21,90%) en el periodo reciente.
+- Esporadicos: 525 benefactores (19,13%) con participacion intermitente.
+
+Ademas, para cada benefactor el sistema calcula automaticamente sus 8 atributos clave: fecha del ultimo aporte -auditando ULT PAGO con 2.165 fechas validas al corte del 18 de noviembre de 2026-, numero de aportes registrados, intervalo promedio en meses entre donaciones, valor acumulado, ticket promedio, recurso al que mas contribuye, tendencia historica y si aporta con familiares o amigos -donde detectamos 530 casos documentados como PERM-DONA CON SU ESPOSO o FLIA OCAMPO-. Ahora los dejo con la parte de Inteligencia Artificial."
+
+DEMOSTRACION RAPIDA EN COLAB (15 seg):
+- Mostrar en la Celda [7] la tabla de las 4 categorias y rangos de antiguedad de ULT PAGO, y en la Celda [8] la ficha de consultar_ficha_benefactor(3).
+
+--------------------------------------------------------------------------------
+BLOQUE 3 - PERSONA 3: RECURSOS DE MAYOR PARTICIPACION, MODELO DE IA Y RECOMENDADOR
+--------------------------------------------------------------------------------
+Diapositivas asociadas : Diapositivas 7, 8 y 9
+Que mostrar en Colab   : Celdas [10], [11], [12] y [13]
+
+GUION ORAL:
+"Hola a todos. Continuando con el analisis, abordamos los recursos de mayor participacion y el Modulo 4 de Inteligencia Artificial.
+
+Primero mapeamos los 9 recursos oficiales (a hasta i) combinando columnas monetarias y evidencia en texto y boletas: los lideres son Bono (con 2.042 benefactores y $259,9 millones registrados en meses recientes) y Donacion directa (1.981 benefactores y $2.721 millones acumulados), seguidos por Evento (310), Banquete navideno (214 y $38,3 millones) y Rifa cantarrilla (136).
+
+Para el modelo predictivo, cuidamos un principio clave exigido en el proyecto: diferenciar un verdadero modelo supervisado de una segmentacion basada en reglas cuando faltan etiquetas confiables.
+- Para los 5 recursos con suficiente historial (Donacion directa, Bono, Rifa cantarrilla, Evento y Banquete navideno), entrenamos un RandomForestClassifier (200 arboles con pesos balanceados) comparado frente a una LogisticRegression en scikit-learn. Para evitar fuga de datos (data leakage), en Donacion directa y Bono entrenamos con variables historicas de 2008-2024 para predecir la participacion efectiva en 2025-2026.
+- Evaluamos con division estratificada 80% entrenamiento / 20% prueba y validacion cruzada 5-Fold, midiendo Accuracy, Precision, Recall, Especificidad, F1-Score, ROC-AUC y Brier Score, graficando la matriz de confusion, las curvas ROC y la importancia de variables.
+- Para recursos con menos de 60 registros explicitos -como Bingo (34), Visita a parroquias (50) o Dia de madres y padres (48)-, documentamos la limitacion de etiquetas y aplicamos un motor hibrido basado en reglas RFM y similitud de eventos.
+
+Finalmente, integramos todo en el prototipo recomendar_benefactores, donde seleccionamos telemercaderista, fecha de gestion y recurso (a-i), excluyendo automaticamente a quienes tienen restriccion de no contacto y alertando si el telefono es compartido."
+
+DEMOSTRACION RAPIDA EN COLAB (20 seg):
+- Mostrar en Celda [11] la tabla de metricas, en Celda [12] las curvas ROC y Matriz de confusion, y en Celda [13] el ranking de recomendacion para Sandra en b. Bono y Viviana en g. Banquete navideno.
+
+--------------------------------------------------------------------------------
+BLOQUE 4 - PERSONA 4 (O PERSONAS 4 Y 5): TELEFONOS COMPARTIDOS, KPIs Y GOBIERNO
+--------------------------------------------------------------------------------
+Diapositivas asociadas : Diapositivas 10, 11 y 12
+Que mostrar en Colab   : Celdas [16], [20], [21] y [23]
+
+GUION ORAL:
+"Y para cerrar, resolvimos la parte operativa, visual y de gobierno de datos.
+
+Primero, en el Modulo 5 (Gestion de Telemercaderistas) detectamos en la base real 156 grupos de telefonos compartidos, donde hasta 7 personas distintas tienen el mismo numero. Para evitar saturar a una familia el mismo dia sin fusionar a las personas, implementamos la clase GestorContactosTelemercadeo.
+
+Aqui en Colab probamos el caso obligatorio de los 4 hermanos: Juan, Felipe, Jesus y Daniel, quienes comparten el mismo telefono pero tienen responsables distintos (Viviana, Sandra, Hna Lina y Jorge) e intereses diferentes (Bono, Donacion directa, Banquete y Rifa). Al intentar llamarlos a todos el mismo dia (2026-11-23), el sistema conserva a los 4 como personas separadas, aprueba el primer turno para Juan y detecta automaticamente la colision para Felipe, Jesus y Daniel, reprogramandolos en fechas espaciadas (2026-11-25, 2026-11-27 y 2026-11-30), ademas de bloquear cualquier intento sobre los 45 registros con restriccion de no contacto.
+
+(Si hay Persona 5, empieza aqui):
+Segundo, construimos en el Modulo 6 el tablero inicial con los 11 indicadores clave (KPIs) y 6 graficos analiticos: distribucion de segmentos, evolucion del recaudo 2008-2026 (mostrando el pico de $448,7 millones en 2025), participacion por los 9 recursos, carga por telemercaderista, canales de pago y estacionalidad mensual.
+
+Por ultimo, en el Modulo 8 (Gobierno y Seguridad de Datos) implementamos el Indice Global de Calidad (IGCD), control de acceso por rol (RBAC) -donde el mensajero solo ve datos logisticos de domicilio-, tokenizacion HMAC-SHA256 de telefonos, aislamiento de columnas sensibles (ENFERMO y CALAMIDAD), backup automatico del Data Warehouse en DuckDB, bitacora de linaje (audit_log_etl), verificacion final SHA-256 del Excel original y nuestra suite de autoverificacion en verde. Muchas gracias, quedamos atentos a sus preguntas!"
+
+DEMOSTRACION RAPIDA EN COLAB (20 seg):
+- Mostrar la Celda [16] (los 4 hermanos separados + reprogramacion anti-saturacion), la Celda [21] (6 graficos) y el final de la Celda [23] (TODAS LAS ASERCIONES APROBADAS).
+
+--------------------------------------------------------------------------------
+RESPUESTAS RAPIDAS ANTE PREGUNTAS DEL PROFESOR
+--------------------------------------------------------------------------------
+1. Como garantizan que el Excel original no se modifico? (Persona 1)
+   Se calcula su hash SHA-256 al inicio y al final (assert HASH_INICIO == HASH_FINAL), se copia a datalake/raw/ y openpyxl lo abre en modo read_only=True.
+
+2. Que diferencia hay entre Data Lake y Data Warehouse en su proyecto? (Persona 1)
+   El Data Lake (Parquet en raw/bronze/silver/gold) guarda los datos historicos crudos e intermedios con schema-on-read; el Data Warehouse (DuckDB) usa schema-on-write en esquema estrella optimizado para SQL y KPIs.
+
+3. Como clasifican a un recurrente sin inventar causas personales? (Persona 2)
+   Con reglas objetivas sobre fact_aportes: >= 4 aportes totales y >= 2 en 2024-2026. Si una celda esta vacia se reporta como 'sin aporte registrado', sin suponer motivos personales.
+
+4. Por que usaron Random Forest y tambien reglas hibridas? (Persona 3)
+   RandomForestClassifier captura relaciones no lineales RFM en recursos con cientos de etiquetas (validado con 5-Fold CV y sin data leakage temporal 2008-2024 -> 2025-2026). Para recursos con menos de 60 casos (ej. Bingo=34), usamos reglas RFM+similitud porque un modelo supervisado puro tendria sobreajuste.
+
+5. Que pasa si dos telemercaderistas llaman al mismo numero el mismo dia? (Persona 4)
+   El sistema nunca fusiona a las personas (Juan, Felipe, Jesus y Daniel conservan sus IDs), pero consulta agenda por telefono_token + fecha_programada, bloquea la segunda llamada del dia y reprograma con dias de enfriamiento.
+
+6. Como protegen los datos de salud (ENFERMO/CALAMIDAD)? (Persona 4 o 5)
+   Se excluyen del modelo de IA comercial, se reemplazan en vistas operativas por una bandera pastoral discreta y se restringen mediante control de acceso por rol (RBAC).
+================================================================================
