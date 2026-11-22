@@ -19,13 +19,10 @@ Solución integral de **Big Data, Analítica de Datos e Inteligencia Artificial*
 
 | Carpeta / Archivo | Descripción |
 | :--- | :--- |
-| **[GUIA_EQUIPO_Y_PRUEBAS_PASO_A_PASO.md](./GUIA_EQUIPO_Y_PRUEBAS_PASO_A_PASO.md)** | **Manual paso a paso para el equipo:** explicación conceptual, cómo probar cada celda en Google Colab, pruebas interactivas en vivo y guion de sustentación. |
 | **[Entregable_1/Avance_1_Formulacion_y_Arquitectura.md](./Entregable_1/Avance_1_Formulacion_y_Arquitectura.md)** | **Documento Técnico Avance 1:** Formulación del proyecto, requerimientos funcionales, arquitectura Big Data, diagrama de flujo, inventario de 130 columnas y primer diagnóstico de calidad. |
 | **[Entregable_1/Avance_1_Fundacion_1380_Colab.ipynb](./Entregable_1/Avance_1_Fundacion_1380_Colab.ipynb)** | **Notebook Google Colab Avance 1:** Ingesta inmutable con verificación SHA-256, inspección de hojas/columnas, diagnóstico automatizado de calidad, primer ETL y carga inicial en Parquet + DuckDB. |
-| **[Entregable_2/Avance_2_Analitica_IA_y_Gestion.md](./Entregable_2/Avance_2_Analitica_IA_y_Gestion.md)** | **Documento Técnico Avance 2:** ETL mejorado con NLP/Regex, modelo dimensional en DuckDB, clasificación de benefactores, modelo de IA (`RandomForestClassifier` + motor híbrido), caso obligatorio de teléfonos compartidos (4 hermanos), 11 KPIs, gobierno de datos y respuestas a las 12 preguntas de sustentación. |
+| **[Entregable_2/Avance_2_Analitica_IA_y_Gestion.md](./Entregable_2/Avance_2_Analitica_IA_y_Gestion.md)** | **Documento Técnico Avance 2:** ETL mejorado con NLP/Regex, modelo dimensional en DuckDB, clasificación de benefactores, modelo de IA (`RandomForestClassifier` + motor híbrido), caso obligatorio de teléfonos compartidos (4 hermanos), 11 KPIs y gobierno de datos. |
 | **[Entregable_2/Avance_2_Fundacion_1380_Colab.ipynb](./Entregable_2/Avance_2_Fundacion_1380_Colab.ipynb)** | **Notebook Google Colab Avance 2 (Integrado):** Pipeline completo ejecutable de principio a fin en Google Colab (Módulos 1, 2, 3, 4, 5, 6 y 8 + suite de autoverificación). |
-| **[Entregable_2/Guion_Sustentacion_Avance_2.md](./Entregable_2/Guion_Sustentacion_Avance_2.md)** | **Guion de Sustentación del Equipo (4–5 integrantes):** Texto oral exacto por bloque, celdas de Google Colab a proyectar y respuestas rápidas para preguntas del profesor. |
-| **[Entregable_2/Presentacion_Avance_2_Fundacion_1380.pptx](./Entregable_2/Presentacion_Avance_2_Fundacion_1380.pptx)** | **Presentación PowerPoint Avance 2 (12 diapositivas 16:9):** Gráficos nativos editables, tablas del caso de los 4 hermanos, métricas de IA, KPIs, gobierno de datos y notas de orador por diapositiva. |
 | **[Recursos/](./Recursos/)** | Enunciado oficial del proyecto (`TRABAJO FINAL INTEGRADOR BIG DATA PROF.pdf`) y base de datos seudonimizada (`BD_F1380_SeudonimizadaAnonimizadaencriptada.xlsx`). |
 | **[Contexto/](./Contexto/)** | Material teórico de referencia del curso ET0155 (Ciclo de vida del dato, ETL, Almacenamiento Data Lake/Warehouse, KPIs/CMI, Visualización, Preparación/Modelado, Data Storytelling y Gobierno de Datos). |
 
@@ -48,8 +45,7 @@ Solución integral de **Big Data, Analítica de Datos e Inteligencia Artificial*
 
 ## Ejecución Rápida en Google Colab
 
-1. Abre [Google Colab](https://colab.research.google.com/) y sube el cuaderno `Entregable_2/Avance_2_Fundacion_1380_Colab.ipynb` (o `Entregable_1/Avance_1_Fundacion_1380_Colab.ipynb`).
+1. Abre [Google Colab](https://colab.research.google.com/) mediante los botones **Open in Colab** de la tabla superior (o sube `Entregable_2/Avance_2_Fundacion_1380_Colab.ipynb` / `Entregable_1/Avance_1_Fundacion_1380_Colab.ipynb`).
 2. Selecciona **Entorno de ejecución → Ejecutar todas**.
 3. Cuando la celda de ingesta lo solicite, selecciona el archivo `Recursos/BD_F1380_SeudonimizadaAnonimizadaencriptada.xlsx`.
-4. Consulta la [Guía Paso a Paso de Pruebas](./GUIA_EQUIPO_Y_PRUEBAS_PASO_A_PASO.md) para ejecutar consultas interactivas en vivo durante la sustentación.
 
