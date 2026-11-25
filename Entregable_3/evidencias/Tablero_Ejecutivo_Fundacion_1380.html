@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIBDA-1380 | Tablero Ejecutivo de Control y Data Storytelling – Fundación 1380</title>
+  <style>
+    :root {
+      --navy: #072A42;
+      --blue: #015583;
+      --cyan: #01B3C2;
+      --yellow: #F8EA39;
+      --slate: #454545;
+      --bg: #f4f7fa;
+      --card: #ffffff;
+    }
+    * { box-sizing: border-box; font-family: 'Segoe UI', Calibri, system-ui, sans-serif; }
+    body { margin: 0; background: var(--bg); color: #1e293b; }
+    header {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 70%, var(--cyan) 100%);
+      color: #fff; padding: 22px 32px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+    }
+    header h1 { margin: 0; font-size: 22px; letter-spacing: -0.3px; }
+    header p { margin: 4px 0 0; opacity: 0.9; font-size: 13px; }
+    .badge-sha { background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.3); padding: 8px 14px; border-radius: 8px; font-size: 11.5px; }
+    .tabs { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 0 32px; display: flex; gap: 6px; overflow-x: auto; }
+    .tab { padding: 13px 18px; cursor: pointer; border: none; background: none; font-weight: 700; color: #64748b; border-bottom: 3px solid transparent; font-size: 13px; white-space: nowrap; }
+    .tab.active { color: var(--blue); border-bottom-color: var(--cyan); }
+    main { max-width: 1380px; margin: 22px auto; padding: 0 24px 40px; }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-bottom: 22px; }
+    .kpi-card { background: var(--card); border-radius: 10px; padding: 15px 18px; box-shadow: 0 2px 6px rgba(7,42,66,0.06); border-top: 4px solid var(--blue); }
+    .kpi-card.accent { border-top-color: var(--cyan); }
+    .kpi-card.warn { border-top-color: #eab308; }
+    .kpi-card .k-num { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #64748b; }
+    .kpi-card .k-val { font-size: 23px; font-weight: 800; color: var(--navy); margin: 5px 0 3px; }
+    .kpi-card .k-sub { font-size: 11.5px; color: #475569; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(460px, 1fr)); gap: 18px; margin-bottom: 20px; }
+    .card { background: var(--card); border-radius: 10px; padding: 18px 20px; box-shadow: 0 2px 6px rgba(7,42,66,0.06); }
+    .card h3 { margin: 0 0 6px; font-size: 15.5px; color: var(--navy); }
+    .card p.story { margin: 0 0 14px; font-size: 12.5px; color: #475569; line-height: 1.45; }
+    .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; font-size: 12px; }
+    .bar-lbl { width: 195px; font-weight: 600; color: #334155; flex-shrink: 0; }
+    .bar-track { flex: 1; background: #e2e8f0; height: 18px; border-radius: 9px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 9px; transition: width 0.4s; }
+    .bar-val { width: 115px; text-align: right; font-weight: 700; color: var(--navy); font-size: 11.5px; flex-shrink: 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+    th { background: var(--navy); color: #fff; padding: 8px; text-align: left; }
+    td { padding: 7px 8px; border-bottom: 1px solid #e2e8f0; }
+    tr:hover td { background: #f8fafc; }
+    .pill { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 11px; font-weight: 700; }
+    .pill-ok { background: #dcfce7; color: #166534; }
+    .pill-reprog { background: #fef9c3; color: #854d0e; }
+    .pill-block { background: #fee2e2; color: #991b1b; }
+    .controls { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
+    select { padding: 7px 12px; border-radius: 6px; border: 1px solid #cbd5e1; font-weight: 600; color: var(--navy); }
+    svg { width: 100%; height: auto; display: block; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>SIBDA-1380 – Tablero Ejecutivo de Benefactores, IA y Gestión Operativa</h1>
+      <p>Fundación 1380 | Arquitectura Medallion Lakehouse (Parquet + DuckDB) | 11 KPIs Oficiales + Data Storytelling</p>
+    </div>
+    <div class="badge-sha">
+      <div><strong>Fuente Excel Inmutable (SHA-256 verificado):</strong> <code>38ce3c1b1ffad55a...ef90e8a</code></div>
+      <div><strong>Volumen:</strong> 2.744 benefactores | 20.804 aportes | COP $ 3.020.016.428</div>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" onclick="openTab('kpis', this)">1. Los 11 KPIs y Clasificación</button>
+    <button class="tab" onclick="openTab('tiempo', this)">2. Evolución 2008–2026 y Estacionalidad</button>
+    <button class="tab" onclick="openTab('ia', this)">3. Recursos (a–i) y Modelo IA</button>
+    <button class="tab" onclick="openTab('tele', this)">4. Telemercaderistas y Caso 4 Hermanos</button>
+    <button class="tab" onclick="openTab('batch', this)">5. Proceso Batch Mensajero y Gobierno</button>
+  </nav>
+
+  <main>
+    <!-- PANEL 1: 11 KPIs -->
+    <section id="kpis" class="panel active">
+      <div class="kpi-grid">
+        <div class="kpi-card"><div class="k-num">KPI 1 • Padrón Total</div><div class="k-val">2.744</div><div class="k-sub">Benefactores únicos registrados</div></div>
+        <div class="kpi-card accent"><div class="k-num">KPI 2 • Recurrentes</div><div class="k-val">940 (34,26%)</div><div class="k-sub">&ge; 4 aportes totales y &ge; 2 en 2024–2026</div></div>
+        <div class="kpi-card accent"><div class="k-num">KPI 3 • Esporádicos + Único</div><div class="k-val">525 + 601</div><div class="k-sub">19,13% esporádicos | 21,90% único aporte</div></div>
+        <div class="kpi-card warn"><div class="k-num">KPI 4 • Sin Aportes Recientes</div><div class="k-val">678 (24,71%)</div><div class="k-sub">320 con hist. 2008–2023 | 358 sin monto</div></div>
+        <div class="kpi-card"><div class="k-num">KPI 5 • Total Aportes</div><div class="k-val">20.804</div><div class="k-sub">Transacciones confirmadas (&gt; $0)</div></div>
+        <div class="kpi-card accent"><div class="k-num">KPI 6 • Valor Acumulado</div><div class="k-val">$ 3.020,02 M</div><div class="k-sub">COP $ 3.020.016.428 verificados</div></div>
+        <div class="kpi-card"><div class="k-num">KPI 9 • Top Telemercaderistas</div><div class="k-val">52,4 %</div><div class="k-sub">Sandra (620), Viviana (423), Hna Lina (279)</div></div>
+        <div class="kpi-card warn"><div class="k-num">KPI 10 • Teléfonos Compartidos</div><div class="k-val">156 grupos</div><div class="k-sub">347 personas | 45 restricciones no contacto</div></div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Clasificación Analítica del Padrón (Módulo 3 – KPIs 1 al 4)</h3>
+          <p class="story">El 34,26 % del padrón sostiene la base recurrente, mientras que el 41,03 % (esporádicos + único aporte) constituye la mayor oportunidad de fidelización sin inventar causas subjetivas sobre los inactivos.</p>
+          <div class="bar-row"><div class="bar-lbl">Permanente o recurrente</div><div class="bar-track"><div class="bar-fill" style="width:34.26%;background:#015583"></div></div><div class="bar-val">940 (34,26%)</div></div>
+          <div class="bar-row"><div class="bar-lbl">Sin aportes recientes (revisión)</div><div class="bar-track"><div class="bar-fill" style="width:24.71%;background:#64748b"></div></div><div class="bar-val">678 (24,71%)</div></div>
+          <div class="bar-row"><div class="bar-lbl">Con un único aporte registrado</div><div class="bar-track"><div class="bar-fill" style="width:21.90%;background:#01B3C2"></div></div><div class="bar-val">601 (21,90%)</div></div>
+          <div class="bar-row"><div class="bar-lbl">Esporádico</div><div class="bar-track"><div class="bar-fill" style="width:19.13%;background:#eab308"></div></div><div class="bar-val">525 (19,13%)</div></div>
+        </div>
+
+        <div class="card">
+          <h3>Aportes Monetarios por Recurso y Modalidad de Pago (KPIs 7 y 10)</h3>
+          <p class="story">La Donación directa concentra el 90,1 % del valor monetario histórico, mientras que el Bono activa al 74,4 % de los benefactores. En logística, 315 aportantes usan recaudo a Domicilio (DO).</p>
+          <div class="bar-row"><div class="bar-lbl">Donación directa (17.428 tx)</div><div class="bar-track"><div class="bar-fill" style="width:90.1%;background:#072A42"></div></div><div class="bar-val">$ 2.721,74 M</div></div>
+          <div class="bar-row"><div class="bar-lbl">Bono mensual (3.192 tx)</div><div class="bar-track"><div class="bar-fill" style="width:18%;background:#015583"></div></div><div class="bar-val">$ 259,94 M</div></div>
+          <div class="bar-row"><div class="bar-lbl">Banquete navideño (184 tx)</div><div class="bar-track"><div class="bar-fill" style="width:6%;background:#01B3C2"></div></div><div class="bar-val">$ 38,34 M</div></div>
+          <hr style="border:none;border-top:1px solid #e2e8f0;margin:12px 0">
+          <div class="bar-row"><div class="bar-lbl">Domicilio (DO – Ruta Mensajero)</div><div class="bar-track"><div class="bar-fill" style="width:42%;background:#015583"></div></div><div class="bar-val">315 benef.</div></div>
+          <div class="bar-row"><div class="bar-lbl">Consignación (CO) / Transf. (TR)</div><div class="bar-track"><div class="bar-fill" style="width:45%;background:#01B3C2"></div></div><div class="bar-val">235 / 105</div></div>
+          <div class="bar-row"><div class="bar-lbl">Sede (SE) / Débito (DE)</div><div class="bar-track"><div class="bar-fill" style="width:14%;background:#454545"></div></div><div class="bar-val">77 / 16</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANEL 2: EVOLUCIÓN TEMPORAL -->
+    <section id="tiempo" class="panel">
+      <div class="grid-2">
+        <div class="card">
+          <h3>Evolución Histórica de Aportes 2008–2026 (KPI 8 – Millones COP)</h3>
+          <p class="story">Crecimiento sostenido desde 2020 ($ 224,3 M) con máximo histórico en 2025 ($ 448,74 M y 5.483 transacciones) impulsado por el control mensual detallado de bonos y aportes regulares.</p>
+          <div id="chart-anual"></div>
+        </div>
+        <div class="card">
+          <h3>Estacionalidad Mensual Comparada 2024 vs 2025 vs 2026 (Millones COP)</h3>
+          <p class="story">Los picos de junio y noviembre-diciembre reflejan el efecto de bonos semestrales y campaña navideña (Banquete + Bonos de diciembre, superando $ 89,5 M en diciembre de 2025).</p>
+          <div id="chart-mensual"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANEL 3: IA & RECURSOS -->
+    <section id="ia" class="panel">
+      <div class="grid-2">
+        <div class="card">
+          <h3>Participación Multifuente en los 9 Recursos Oficiales (KPI 11)</h3>
+          <p class="story">Se diferencia explícitamente entre los 5 recursos con soporte masivo (&ge; 136 positivos, modelados con RandomForest supervisado sin data leakage) y los 4 recursos de nicho (&le; 57 casos, resueltos con motor híbrido RFM + NLP).</p>
+          <div class="bar-row"><div class="bar-lbl">b. Bono (ML Supervisado)</div><div class="bar-track"><div class="bar-fill" style="width:74.4%;background:#015583"></div></div><div class="bar-val">2.042 (74,4%)</div></div>
+          <div class="bar-row"><div class="bar-lbl">a. Donación directa (ML Superv.)</div><div class="bar-track"><div class="bar-fill" style="width:72.2%;background:#072A42"></div></div><div class="bar-val">1.981 (72,2%)</div></div>
+          <div class="bar-row"><div class="bar-lbl">d. Evento (ML + Encuesta)</div><div class="bar-track"><div class="bar-fill" style="width:15%;background:#01B3C2"></div></div><div class="bar-val">310 (11,3%)</div></div>
+          <div class="bar-row"><div class="bar-lbl">g. Banquete navideño (ML)</div><div class="bar-track"><div class="bar-fill" style="width:11%;background:#01B3C2"></div></div><div class="bar-val">214 (7,8%)</div></div>
+          <div class="bar-row"><div class="bar-lbl">c. Rifa cantarrilla (ML + Boletas)</div><div class="bar-track"><div class="bar-fill" style="width:8%;background:#01B3C2"></div></div><div class="bar-val">136 (5,0%)</div></div>
+          <div class="bar-row"><div class="bar-lbl">i. Otro recurso configurable (Híbrido)</div><div class="bar-track"><div class="bar-fill" style="width:4%;background:#eab308"></div></div><div class="bar-val">57 (2,1%)</div></div>
+          <div class="bar-row"><div class="bar-lbl">f. Visita a parroquias (Híbrido)</div><div class="bar-track"><div class="bar-fill" style="width:3.6%;background:#eab308"></div></div><div class="bar-val">50 (1,8%)</div></div>
+          <div class="bar-row"><div class="bar-lbl">h. Día madres y padres (Híbrido)</div><div class="bar-track"><div class="bar-fill" style="width:3.5%;background:#eab308"></div></div><div class="bar-val">48 (1,7%)</div></div>
+          <div class="bar-row"><div class="bar-lbl">e. Bingo (Híbrido RFM+Eventos)</div><div class="bar-track"><div class="bar-fill" style="width:2.8%;background:#eab308"></div></div><div class="bar-val">34 (1,2%)</div></div>
+        </div>
+
+        <div class="card">
+          <h3>Simulador de Recomendación IA por Telemercaderista y Recurso (Módulo 4)</h3>
+          <p class="story">Filtra automáticamente benefactores sin restricción de contacto y alerta teléfonos compartidos antes de agendar.</p>
+          <div class="controls">
+            <label>Telemercaderista:
+              <select id="selTele" onchange="filtrarSimulador()">
+                <option value="TODOS">Todas</option>
+                <option value="Sandra" selected>Sandra</option>
+                <option value="Viviana">Viviana</option>
+                <option value="Hna Lina">Hna Lina</option>
+                <option value="JD">JD</option>
+              </select>
+            </label>
+            <label>Recurso:
+              <select id="selRec" onchange="filtrarSimulador()">
+                <option value="Bono">b. Bono</option>
+                <option value="Donación directa">a. Donación directa</option>
+                <option value="Banquete navideño">g. Banquete navideño</option>
+                <option value="Rifa cantarrilla">c. Rifa cantarrilla</option>
+              </select>
+            </label>
+          </div>
+          <table>
+            <thead><tr><th>COD</th><th>Benefactor</th><th>Responsable</th><th>Segmento</th><th>Teléfono</th><th>Afinidad IA</th></tr></thead>
+            <tbody id="tbSim"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANEL 4: TELEMERCADERISTAS Y 4 HERMANOS -->
+    <section id="tele" class="panel">
+      <div class="grid-2">
+        <div class="card">
+          <h3>Carga de Cartera por Telemercaderista (KPI 9)</h3>
+          <p class="story">Distribución verificada en DuckDB sobre los 2.744 benefactores, permitiendo incorporar nuevos usuarios dinámicamente.</p>
+          <div class="bar-row"><div class="bar-lbl">Sandra (+ carteras compartidas)</div><div class="bar-track"><div class="bar-fill" style="width:72%;background:#072A42"></div></div><div class="bar-val">717 benef.</div></div>
+          <div class="bar-row"><div class="bar-lbl">Viviana</div><div class="bar-track"><div class="bar-fill" style="width:45%;background:#015583"></div></div><div class="bar-val">423 benef.</div></div>
+          <div class="bar-row"><div class="bar-lbl">Hna Lina (+ compartidas)</div><div class="bar-track"><div class="bar-fill" style="width:32%;background:#015583"></div></div><div class="bar-val">302 benef.</div></div>
+          <div class="bar-row"><div class="bar-lbl">Jorge</div><div class="bar-track"><div class="bar-fill" style="width:23%;background:#01B3C2"></div></div><div class="bar-val">212 benef.</div></div>
+          <div class="bar-row"><div class="bar-lbl">Vicmar</div><div class="bar-track"><div class="bar-fill" style="width:20%;background:#01B3C2"></div></div><div class="bar-val">185 benef.</div></div>
+          <div class="bar-row"><div class="bar-lbl">JD</div><div class="bar-track"><div class="bar-fill" style="width:18%;background:#01B3C2"></div></div><div class="bar-val">162 benef.</div></div>
+          <div class="bar-row"><div class="bar-lbl">NSE</div><div class="bar-track"><div class="bar-fill" style="width:12%;background:#64748b"></div></div><div class="bar-val">108 benef.</div></div>
+        </div>
+
+        <div class="card">
+          <h3>Caso Obligatorio Verificado: Los 4 Hermanos (Juan, Felipe, Jesús y Daniel)</h3>
+          <p class="story">Los 4 hermanos comparten <code>TEL_FAM_HERMANOS_3001234567</code> sin fusionar sus registros individuales. Al intentar programarlos el mismo día (<code>2026-11-27</code>), el motor escalona las llamadas cada 2 días.</p>
+          <table>
+            <thead><tr><th>ID</th><th>Hermano</th><th>Responsable</th><th>Recurso</th><th>Fecha Solicitada</th><th>Fecha Final</th><th>Estado Coordinación</th></tr></thead>
+            <tbody>
+              <tr><td>9001</td><td><strong>Juan</strong></td><td>Viviana</td><td>b. Bono</td><td>2026-11-27</td><td><strong>2026-11-27</strong></td><td><span class="pill pill-ok">PROGRAMADO (Libre)</span></td></tr>
+              <tr><td>9002</td><td><strong>Felipe</strong></td><td>Sandra</td><td>a. Donación directa</td><td>2026-11-27</td><td><strong>2026-11-29</strong></td><td><span class="pill pill-reprog">REPROGRAMADO (+2d)</span></td></tr>
+              <tr><td>9003</td><td><strong>Jesús</strong></td><td>Hna Lina</td><td>g. Banquete navideño</td><td>2026-11-27</td><td><strong>2026-12-01</strong></td><td><span class="pill pill-reprog">REPROGRAMADO (+4d)</span></td></tr>
+              <tr><td>9004</td><td><strong>Daniel</strong></td><td>Jorge</td><td>c. Rifa cantarrilla</td><td>2026-11-27</td><td><strong>2026-12-03</strong></td><td><span class="pill pill-reprog">REPROGRAMADO (+6d)</span></td></tr>
+              <tr><td>Real</td><td>Restringido</td><td>Sandra</td><td>a. Donación directa</td><td>2026-11-28</td><td>Bloqueado</td><td><span class="pill pill-block">NO CONTACTO</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANEL 5: BATCH Y GOBIERNO -->
+    <section id="batch" class="panel">
+      <div class="grid-2">
+        <div class="card">
+          <h3>Módulo 7: Proceso Batch del Mensajero (Corte 2026-10-16 &rarr; Día Anterior 2026-10-15)</h3>
+          <p class="story">De 29 transacciones registradas el día anterior, el script filtra 19 registros logísticos y los optimiza en 18 paradas físicas (Envigado, Itagüí y Medellín) por COP $ 655.000, suprimiendo datos personales innecesarios.</p>
+          <table>
+            <thead><tr><th>Parada</th><th>COD</th><th>Municipio</th><th>Dirección Token</th><th>Gestión</th><th>Valor COP</th><th>Responsable</th></tr></thead>
+            <tbody>
+              <tr><td>P-01</td><td>1546</td><td>Envigado</td><td>ID_ba507a4877</td><td>Recaudo domicilio</td><td>$ 10.000</td><td>JD</td></tr>
+              <tr><td>P-03</td><td>218</td><td>Itagüí</td><td>ID_af40075cce</td><td>Recaudo domicilio</td><td>$ 20.000</td><td>JD</td></tr>
+              <tr><td>P-07</td><td>435</td><td>Medellín</td><td>ID_4d35f7e3af</td><td>Entrega física recibo</td><td>$ 150.000</td><td>Sandra</td></tr>
+              <tr><td>P-10</td><td>1893 &amp; 1894</td><td>Medellín</td><td>ID_fb79048e2f (Compartida)</td><td>2 recaudos en 1 parada</td><td>$ 20.000</td><td>JD</td></tr>
+              <tr><td>P-16</td><td>1704</td><td>Medellín</td><td>ID_e68f589f66</td><td>Recaudo domicilio</td><td>$ 100.000</td><td>Sandra</td></tr>
+              <tr><td>P-17</td><td>20</td><td>Medellín</td><td>ID_bb5aef1fab</td><td>Recaudo domicilio</td><td>$ 50.000</td><td>Hna Lina</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h3>Módulo 8: Gobierno, Calidad y Seguridad de Datos (8 Pilares)</h3>
+          <p class="story">Controles técnicos activos y auditados automáticamente en el pipeline de Google Colab y DuckDB.</p>
+          <table>
+            <thead><tr><th>Pilar de Gobierno</th><th>Control Técnico Implementado</th><th>Estado</th></tr></thead>
+            <tbody>
+              <tr><td>1. Calidad (IGCD)</td><td>Completitud clave, unicidad COD (100%) y validez de fechas</td><td><span class="pill pill-ok">96,8 % OK</span></td></tr>
+              <tr><td>2. Inmutabilidad Fuente</td><td>Lectura sobre copia en <code>/raw</code> + <code>assert SHA-256 inicio == final</code></td><td><span class="pill pill-ok">INTACTO</span></td></tr>
+              <tr><td>3. Control Acceso (RBAC)</td><td>Vistas segregadas: Telemercaderista, Mensajero, Analista, Admin</td><td><span class="pill pill-ok">ACTIVO</span></td></tr>
+              <tr><td>4. Protección PII</td><td>100% tokens <code>PER_</code>, <code>ID_</code>, <code>TEL_</code>, <code>UBI_</code> + <code>HMAC-SHA256</code></td><td><span class="pill pill-ok">CUMPLIDO</span></td></tr>
+              <tr><td>5. Datos Sensibles</td><td>Aislamiento de <code>ENFERMO</code> (83) y <code>CALAMIDAD</code> (80) fuera de IA</td><td><span class="pill pill-ok">PROTEGIDO</span></td></tr>
+              <tr><td>6. Backups y Linaje</td><td>Respaldo <code>.duckdb</code> fechado + tabla <code>audit_log_etl</code></td><td><span class="pill pill-ok">VERIFICADO</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function openTab(id, btn) {
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    // SVG Chart 1: Annual Series 2008-2026
+    const years = [2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026];
+    const valsM = [3.0,24.8,28.7,32.4,70.4,58.0,79.1,68.3,77.2,110.0,131.2,155.3,224.3,232.7,237.8,259.5,413.5,448.7,365.1];
+    (function renderAnual() {
+      const w = 560, h = 230, padL = 42, padR = 18, padT = 20, padB = 32;
+      const maxV = 480;
+      const pts = valsM.map((v, i) => {
+        const x = padL + (i / (valsM.length - 1)) * (w - padL - padR);
+        const y = h - padB - (v / maxV) * (h - padT - padB);
+        return [x, y, years[i], v];
+      });
+      const poly = pts.map(p => p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
+      const area = padL+','+(h-padB)+' '+poly+' '+(w-padR)+','+(h-padB);
+      let circles = pts.map(p => `<circle cx="${p[0]}" cy="${p[1]}" r="3.5" fill="#015583"><title>${p[2]}: COP $ ${p[3]} M</title></circle>`).join('');
+      let xLabels = pts.filter((_, i) => i % 3 === 0 || i === pts.length - 1).map(p => `<text x="${p[0]}" y="${h-10}" font-size="10" text-anchor="middle" fill="#475569">${p[2]}</text>`).join('');
+      document.getElementById('chart-anual').innerHTML = `<svg viewBox="0 0 ${w} ${h}">
+        <line x1="${padL}" y1="${h-padB}" x2="${w-padR}" y2="${h-padB}" stroke="#cbd5e1"/>
+        <polygon points="${area}" fill="rgba(1,179,194,0.2)"/>
+        <polyline points="${poly}" fill="none" stroke="#015583" stroke-width="2.5"/>
+        ${circles}${xLabels}
+      </svg>`;
+    })();
+
+    // SVG Chart 2: Monthly Seasonality 2024-2026
+    (function renderMensual() {
+      const meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+      const s24 = [23.7,29.3,23.5,39.5,23.4,42.4,29.6,31.2,29.1,25.6,47.4,68.9];
+      const s25 = [25.6,23.6,35.9,28.3,30.6,46.1,32.9,35.6,30.2,34.1,36.3,89.6];
+      const s26 = [39.9,39.7,45.9,47.1,40.4,35.9,30.0,33.4,28.5,23.6,0.5,0.4];
+      const w = 560, h = 230, padL = 40, padR = 18, padT = 20, padB = 32, maxV = 95;
+      function mkLine(arr, color) {
+        const pts = arr.map((v, i) => [padL + (i / 11) * (w - padL - padR), h - padB - (v / maxV) * (h - padT - padB)]);
+        return `<polyline points="${pts.map(p => p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ')}" fill="none" stroke="${color}" stroke-width="2.2"/>`;
+      }
+      const xLbl = meses.map((m, i) => `<text x="${padL + (i/11)*(w-padL-padR)}" y="${h-10}" font-size="10" text-anchor="middle" fill="#475569">${m}</text>`).join('');
+      document.getElementById('chart-mensual').innerHTML = `<svg viewBox="0 0 ${w} ${h}">
+        <line x1="${padL}" y1="${h-padB}" x2="${w-padR}" y2="${h-padB}" stroke="#cbd5e1"/>
+        ${mkLine(s24, '#64748b')}${mkLine(s25, '#015583')}${mkLine(s26, '#01B3C2')}${xLbl}
+        <text x="410" y="22" font-size="10" fill="#64748b" font-weight="bold">&#9644; 2024</text>
+        <text x="458" y="22" font-size="10" fill="#015583" font-weight="bold">&#9644; 2025</text>
+        <text x="506" y="22" font-size="10" fill="#01B3C2" font-weight="bold">&#9644; 2026</text>
+      </svg>`;
+    })();
+
+    const muestraCand = [
+      {cod: 426, nom: 'PER_3b6fb5403a', resp: 'Sandra', seg: 'Permanente o recurrente', tel: 'Individual', rec: 'Bono', prob: '96,4%'},
+      {cod: 104, nom: 'PER_7b2d2bfc3c', resp: 'Sandra', seg: 'Permanente o recurrente', tel: 'TEL. COMPARTIDO (2p)', rec: 'Bono', prob: '94,8%'},
+      {cod: 435, nom: 'PER_422c6dd725', resp: 'Sandra', seg: 'Permanente o recurrente', tel: 'Individual', rec: 'Donación directa', prob: '95,2%'},
+      {cod: 1704, nom: 'PER_e0c969902f', resp: 'Sandra', seg: 'Permanente o recurrente', tel: 'Individual', rec: 'Banquete navideño', prob: '92,0%'},
+      {cod: 3, nom: 'PER_benefactor_003', resp: 'Viviana', seg: 'Permanente o recurrente', tel: 'Individual', rec: 'Bono', prob: '95,1%'},
+      {cod: 88, nom: 'PER_benefactor_088', resp: 'Viviana', seg: 'Permanente o recurrente', tel: 'Individual', rec: 'Banquete navideño', prob: '92,5%'},
+      {cod: 20, nom: 'PER_6320dd1984', resp: 'Hna Lina', seg: 'Permanente o recurrente', tel: 'TEL. COMPARTIDO (2p)', rec: 'Donación directa', prob: '93,7%'},
+      {cod: 312, nom: 'PER_benefactor_312', resp: 'Hna Lina', seg: 'Esporádico', tel: 'Individual', rec: 'Rifa cantarrilla', prob: '92,0%'},
+      {cod: 1361, nom: 'PER_4225206c72', resp: 'JD', seg: 'Permanente o recurrente', tel: 'Individual', rec: 'Bono', prob: '93,9%'}
+    ];
+
+    function filtrarSimulador() {
+      const t = document.getElementById('selTele').value;
+      const r = document.getElementById('selRec').value;
+      const rows = muestraCand.filter(x => (t === 'TODOS' || x.resp === t) && (x.rec === r || t !== 'TODOS'));
+      document.getElementById('tbSim').innerHTML = rows.map(x => `<tr>
+        <td>${x.cod}</td><td>${x.nom}</td><td>${x.resp}</td><td>${x.seg}</td>
+        <td>${x.tel.includes('COMPARTIDO') ? '<span class="pill pill-reprog">'+x.tel+'</span>' : x.tel}</td>
+        <td><strong>${x.prob}</strong></td>
+      </tr>`).join('');
+    }
+    filtrarSimulador();
+  </script>
+</body>
+</html>

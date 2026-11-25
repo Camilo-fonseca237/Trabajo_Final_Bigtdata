@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Planilla Logística Imprimible del Mensajero – Fundación 1380 (Corte 2026-10-16)</title>
+  <style>
+    :root { --azul: #015583; --oscuro: #072A42; --turquesa: #01B3C2; --amarillo: #F8EA39; --gris: #F2F2F2; }
+    * { box-sizing: border-box; font-family: 'Segoe UI', Calibri, Arial, sans-serif; }
+    body { margin: 22px; color: #1e293b; background: #ffffff; font-size: 12px; }
+    .no-print { margin-bottom: 14px; display: flex; gap: 12px; align-items: center; background: #f1f5f9; padding: 10px 14px; border-radius: 8px; }
+    .btn { background: var(--azul); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 700; }
+    .btn:hover { background: var(--oscuro); }
+    .header { border-bottom: 3px solid var(--azul); padding-bottom: 10px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+    .header h1 { margin: 0; font-size: 18px; color: var(--oscuro); }
+    .header p { margin: 4px 0 0; color: #475569; font-size: 11.5px; }
+    .meta-box { background: var(--gris); border-left: 4px solid var(--turquesa); padding: 8px 14px; font-size: 11px; min-width: 255px; }
+    .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 14px; }
+    .kpi { border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; background: #f8fafc; }
+    .kpi .lbl { font-size: 10px; text-transform: uppercase; color: #64748b; font-weight: 700; }
+    .kpi .val { font-size: 17px; font-weight: 800; color: var(--oscuro); margin-top: 2px; }
+    table { width: 100%; border-collapse: collapse; font-size: 10.5px; }
+    th { background: var(--oscuro); color: #fff; padding: 6px 5px; text-align: left; font-weight: 600; }
+    td { border: 1px solid #cbd5e1; padding: 5px; vertical-align: middle; }
+    tr:nth-child(even) td { background: #f8fafc; }
+    .c { text-align: center; }
+    .r { text-align: right; white-space: nowrap; font-weight: 700; }
+    .firma { width: 95px; height: 24px; }
+    .privacy { margin-top: 12px; padding: 9px 12px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; font-size: 10.5px; color: #1e3a8a; }
+    .footer { margin-top: 22px; display: flex; justify-content: space-between; font-size: 10.5px; color: #475569; gap: 20px; }
+    .sig-line { margin-top: 28px; border-top: 1px solid #334155; padding-top: 4px; width: 230px; text-align: center; font-weight: 600; }
+    @media print {
+      .no-print { display: none !important; }
+      body { margin: 6mm; }
+      @page { size: landscape; margin: 8mm; }
+    }
+  </style>
+</head>
+<body>
+  <div class="no-print">
+    <button class="btn" onclick="window.print()">Imprimir / Guardar como PDF</button>
+    <span><strong>Módulo 7 – Evidencia Real Verificada:</strong> Extracción batch automática ejecutada sobre <code>BD_F1380_SeudonimizadaAnonimizadaencriptada.xlsx</code>.</span>
+  </div>
+
+  <div class="header">
+    <div>
+      <h1>FUNDACIÓN 1380 – REPORTE LOGÍSTICO DIARIO PARA EL MENSAJERO (PROCESO BATCH)</h1>
+      <p>Plataforma SIBDA-1380 | Extracción de transacciones del día anterior con requerimiento de recaudo o entrega a domicilio</p>
+    </div>
+    <div class="meta-box">
+      <div><strong>1. Fecha de corte:</strong> 2026-10-16</div>
+      <div><strong>2. Día anterior consultado:</strong> 2026-10-15</div>
+      <div><strong>Batch ID:</strong> BATCH_MSG_20261016</div>
+    </div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi">
+      <div class="lbl">Transacciones Día Anterior</div>
+      <div class="val">29 registros</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">Registros Logísticos Encontrados</div>
+      <div class="val">19 operaciones</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">Paradas Físicas Consolidadas</div>
+      <div class="val">18 direcciones</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">Total Estimado Operación</div>
+      <div class="val">COP $ 655.000</div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th class="c">#</th>
+        <th class="c">Parada</th>
+        <th class="c">COD</th>
+        <th>Benefactor (Token)</th>
+        <th>Municipio</th>
+        <th>Barrio</th>
+        <th>Dirección Logística</th>
+        <th>Teléfono Contacto</th>
+        <th>Tipo Gestión</th>
+        <th class="c">Día Ruta</th>
+        <th class="c">Recibo Ref.</th>
+        <th class="r">Valor COP</th>
+        <th>Responsable</th>
+        <th class="c">Firma / Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+    <td class="c">1</td>
+    <td class="c"><strong>P-01</strong></td>
+    <td class="c">1547</td>
+    <td>Señora PER_a898c11fcb</td>
+    <td>Envigado</td>
+    <td>UBI_7c0707dc58</td>
+    <td>ID_971299c5de</td>
+    <td>TEL_8d550daede</td>
+    <td>Recaudo a domicilio</td>
+    <td class="c">23</td>
+    <td class="c">17500</td>
+    <td class="r">$ 10.000</td>
+    <td>JD</td>
+    <td class="firma"></td>
+  </tr>
+<tr>
+    <td class="c">2</td>
+    <td class="c"><strong>P-02</strong></td>
+    <td class="c">1546</td>
+    <td>Señora PER_70e570f6e8</td>
+    <td>Envigado</td>
+    <td>UBI_7c0707dc58</td>
+    <td>ID_ba507a4877</td>
+    <td>TEL_f9042ba5c9</td>
+    <td>Recaudo a domicilio</td>
+    <td class="c">23</td>
+    <td class="c">17500</td>
+    <td class="r">$ 10.000</td>
+    <td>JD</td>
+    <td class="firma"></td>
+  </tr>
+<tr>
+    <td class="c">3</td>
+    <td class="c"><strong>P-03</strong></td>
+    <td class="c">218</td>
+    <td>Señora PER_3a19043af6</td>
+    <td>Itagui</td>
+    <td>UBI_4f616c7482</td>
+    <td>ID_af40075cce</td>
+    <td>TEL_f920e49504</td>
+    <td>Recaudo a domicilio</td>
+    <td class="c">4</td>
+    <td class="c">17500</td>
+    <td class="r">$ 20.000</td>
+    <td>JD</td>
+    <td class="firma"></td>
+  </tr>
+<tr>
+    <td class="c">4</td>
+    <td class="c"><strong>P-04</strong></td>
+    <td class="c">2269</td>
+    <td>Señora PER_cc825059fc</td>
+    <td>Itagui</td>
+    <td>UBI_e088a83d42</td>
+    <td>ID_04e8720824</td>
+    <td>TEL_e87ff1dcfd</td>
+    <td>Recaudo a domicilio</td>
+    <td class="c">15</td>
+    <td class="c">17500</td>
+    <td class="r">$ 20.000</td>
+    <td>JD</td>
+    <td class="firma"></td>
+  </tr>
+<tr>
+    <td class="c">5</td>
+    <td class="c"><strong>P-05</strong></td>
+    <td class="c">553</td>
+    <td>Señora PER_fa9504e588</td>
+    <td>Medellin</td>
+    <td>UBI_06c7a65d53</td>
+    <td>ID_21ced66133</td>
+    <td>TEL_51dd9a4154</td>
+    <td>Recaudo a domicilio</td>
+    <td class="c">1</td>
+    <td class="c">17500</td>
+    <td class="r">$ 10.000</td>
+    <td>JD</td>
+    <td class="firma"></td>
+  </tr>
+<tr>
+    <td class="c">6</td>
+    <td class="c"><strong>P-06</strong></td>
+    <td class="c">590</td>
+    <td>Señora PER_6dc70a0cab</td>
+    <td>Medellin</td>
+    <td>UBI_06c7a65d53</td>
+    <td>ID_96dc2ad7fc</td>
+    <td>TEL_71e8245d7d</td>
+    <td>Recaudo a domicilio</td>
+    <td class="c">3</td>
+    <td class="c">17500</td>
+    <td class="r">$ 50.000</td>
+    <td>JD</td>
+    <td class="firma"></td>
+  </tr>
+<tr>
+    <td class="c">7</td>
+    <td class="c"><strong>P-07</strong></td>
+    <td class="c">435</td>
+    <td>Señora PER_422c6dd725</td>
+    <td>Medellin</td>
+    <td>UBI_448a551808</td>
+    <td>ID_4d35f7e3af</td>
+    <td>TEL_b80f4abb5a</td>
+    <td>Entrega física de recibo</td>
+    <td class="c">Ruta diaria</td>
+    <td class="c">17479</td>
+    <td class="r">$ 150.000</td>
+    <td>Sandra</td>
+    <td class="firma"></td>
+  </tr>
+<tr>
+    <td class="c">8</td>
+    <td class="c"><strong>P-08</strong></td>
+    <td class="c">1309</td>
+    <td>Señora PER_74b02e21db</td>
+    <td>Medellin</td>
+    <td>UBI_46d9deb85b</td>
+    <td>ID_4a35e7406f</td>
+    <td>TEL_98614b75b9</td>
+    <td>Recaudo a domicilio</td>
+    <td class="c">5</td>
+    <td class="c">17500</td>
+    <td class="r">$ 20.000</td>
+    <td>Sandra</td>
+    <td class="firma"></td>
+  </tr>
+<tr>
+    <td class="c">9</td>
+    <td class="c"><strong>P-09</strong></td>
+    <td class="c">1303</td>
+    <td>Señora PER_22396210b5</td>
+    <td>Medellin</td>
+    <td>UBI_54678e1b5f</td>
+    <td>ID_1a8236a112</td>
+    <td>TEL_5f31930f17</td>
+    <td>Recaudo a domicilio</td>
+    <td class="c">14</td>
+    <td class="c">17500</td>
+    <td class="r">$ 20.000</td>
+    <td>JD</td>
+    <td class="firma"></td>
+  </tr>
+<tr>
+    <td class="c">10</td>
+    <td class="c"><strong>P-10</strong></td>
+    <td class="c">519</td>
+    <td>Señora PER_e3b2702067</td>
+    <td>Medellin</td>
+    <td>UBI_54678e1b5f</td>
+    <td>ID_9b0cc8db7d</td>
+    <td>TEL_d1204c6fd1</td>
+    <td>Recaudo a domicilio</td>
+    <td class="c">Ruta diaria</td>
+    <td class="c">17500</td>
+    <td class="r">$ 20.000</td>
+    <td>JD</td>
+    <td class="firma"></td>
+  </tr>
+<tr>
+    <td class="c">11</td>
+    <td class="c"><strong>P-11</strong> <span style="background:#fef08a;color:#854d0e;padding:1px 5px;border-radius:4px;font-size:9px;font-weight:700;">MISMA DIR.</span></td>
+    <td class="c">1893</td>
+    <td>Señora PER_a00fc07c78</td>
+    <td>Medellin</td>
+    <td>UBI_5d631d22b1</td>
+    <td>ID_fb79048e2f</td>
+    <td>TEL_bb4b8ebfb1</td>
+    <td>Recaudo a domicilio</td>
+    <td class="c">9</td>
+    <td class="c">17500</td>
+    <td class="r">$ 10.000</td>
+    <td>JD</td>
+    <td class="firma"></td>
+  </tr>
+<tr>
+    <td class="c">12</td>
+    <td class="c"><strong>P-11</strong> <span style="background:#fef08a;color:#854d0e;padding:1px 5px;border-radius:4px;font-size:9px;font-weight:700;">MISMA DIR.</span></td>
+    <td class="c">1894</td>
+    <td>Señora PER_0fa85c9daa</td>
+    <td>Medellin</td>
+    <td>UBI_5d631d22b1</td>
+    <td>ID_fb79048e2f</td>
+    <td>TEL_896b6ecb13</td>
+    <td>Recaudo a domicilio</td>
+    <td class="c">9</td>
+    <td class="c">17500</td>
+    <td class="r">$ 10.000</td>
+    <td>JD</td>
+    <td class="firma"></td>
+  </tr>
+<tr>
+    <td class="c">13</td>
+    <td class="c"><strong>P-12</strong></td>
+    <td class="c">104</td>
+    <td>Señora PER_7b2d2bfc3c</td>
+    <td>Medellin</td>
+    <td>UBI_65a409b2f6</td>
+    <td>ID_12d1c854d4</td>
+    <td>TEL_b28b5145d5</td>
+    <td>Recaudo a domicilio</td>
+    <td class="c">5</td>
+    <td class="c">17500</td>
+    <td class="r">$ 50.000</td>
+    <td>Sandra</td>
+    <td class="firma"></td>
+  </tr>
+<tr>
+    <td class="c">14</td>
+    <td class="c"><strong>P-13</strong></td>
+    <td class="c">2313</td>
+    <td>Señora PER_0ffbf6a76f</td>
+    <td>Medellin</td>
+    <td>UBI_65a409b2f6</td>
+    <td>ID_16c1455e3b</td>
+    <td>TEL_b28b5145d5</td>
+    <td>Recaudo a domicilio</td>
+    <td class="c">5</td>
+    <td class="c">17500</td>
+    <td class="r">$ 50.000</td>
+    <td>Sandra</td>
+    <td class="firma"></td>
+  </tr>
+<tr>
+    <td class="c">15</td>
+    <td class="c"><strong>P-14</strong></td>
+    <td class="c">1603</td>
+    <td>Señora PER_13e901971e</td>
+    <td>Medellin</td>
+    <td>UBI_7e64015e99</td>
+    <td>ID_0b99d0ae66</td>
+    <td>TEL_5e8a8f7794</td>
+    <td>Recaudo a domicilio</td>
+    <td class="c">1</td>
+    <td class="c">17500</td>
+    <td class="r">Por confirmar</td>
+    <td>Sandra</td>
+    <td class="firma"></td>
+  </tr>
+<tr>
+    <td class="c">16</td>
+    <td class="c"><strong>P-15</strong></td>
+    <td class="c">708</td>
+    <td>Señora PER_8400b58756</td>
+    <td>Medellin</td>
+    <td>UBI_ba9f4abe79</td>
+    <td>ID_dfd950c65d</td>
+    <td>TEL_122613ce45</td>
+    <td>Recaudo a domicilio</td>
+    <td class="c">14</td>
+    <td class="c">17500</td>
+    <td class="r">$ 30.000</td>
+    <td>JD</td>
+    <td class="firma"></td>
+  </tr>
+<tr>
+    <td class="c">17</td>
+    <td class="c"><strong>P-16</strong></td>
+    <td class="c">1704</td>
+    <td>Señora PER_e0c969902f</td>
+    <td>Medellin</td>
+    <td>UBI_ba9f4abe79</td>
+    <td>ID_e68f589f66</td>
+    <td>TEL_cfc592d16d</td>
+    <td>Recaudo a domicilio</td>
+    <td class="c">8</td>
+    <td class="c">17500</td>
+    <td class="r">$ 100.000</td>
+    <td>Sandra</td>
+    <td class="firma"></td>
+  </tr>
+<tr>
+    <td class="c">18</td>
+    <td class="c"><strong>P-17</strong></td>
+    <td class="c">20</td>
+    <td>Señora PER_6320dd1984</td>
+    <td>Medellin</td>
+    <td>UBI_c90e068c08</td>
+    <td>ID_bb5aef1fab</td>
+    <td>TEL_5118367735</td>
+    <td>Recaudo a domicilio</td>
+    <td class="c">24</td>
+    <td class="c">17500</td>
+    <td class="r">$ 50.000</td>
+    <td>Hna Lina</td>
+    <td class="firma"></td>
+  </tr>
+<tr>
+    <td class="c">19</td>
+    <td class="c"><strong>P-18</strong></td>
+    <td class="c">1085</td>
+    <td>Señora PER_030803c328</td>
+    <td>Medellin</td>
+    <td>UBI_dd88d2a7fe</td>
+    <td>ID_b3870b47e5</td>
+    <td>TEL_a8e047682b</td>
+    <td>Recaudo a domicilio</td>
+    <td class="c">9</td>
+    <td class="c">17500</td>
+    <td class="r">$ 25.000</td>
+    <td>Sandra</td>
+    <td class="firma"></td>
+  </tr>
+    </tbody>
+  </table>
+
+  <div class="privacy">
+    <strong>Cumplimiento de Privacidad y Minimización de Datos (Módulo 7 y Módulo 8 – Ley 1581 de 2012):</strong> Este reporte expone exclusivamente la información logística indispensable para el mensajero. Se excluyen por diseño número de cédula, correo electrónico, patrimonio histórico acumulado, clasificación del benefactor y observaciones sensibles de salud o calamidad (<code>ENFERMO</code> / <code>CALAMIDAD</code>). Note además la consolidación automática en la parada <strong>P-10</strong> (<code>COD 1893</code> y <code>COD 1894</code> comparten la misma dirección <code>ID_fb79048e2f</code>).
+  </div>
+
+  <div class="footer">
+    <div class="sig-line">Autoriza: Coordinación Telemercadeo</div>
+    <div class="sig-line">Recibe Ruta: Mensajero Fundación 1380</div>
+    <div class="sig-line">Arqueo y Control: Tesorería</div>
+  </div>
+</body>
+</html>
