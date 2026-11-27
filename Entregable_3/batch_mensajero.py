@@ -293,6 +293,9 @@ def ejecutar_batch_mensajero(
         df_log = df_tx_ayer.copy()
 
     # Paso 4: Organizar únicamente la información necesaria para el mensajero (minimización PII)
+    # Nota clara de roles:
+    # - donante_benefactor       -> Persona externa a visitar en ruta (benefactor_token)
+    # - empleada_telemercaderista -> Empleada de la Fundación que gestionó la llamada (responsable_telemercadeo)
     registros_salida = []
     for _, row in df_log.iterrows():
         tp = str(row.get("tipo_pago_norm", ""))
@@ -303,11 +306,13 @@ def ejecutar_batch_mensajero(
         else:
             tipo_gest = "Entrega física de recibo"
 
+        donante_val = row.get("donante_benefactor", row.get("nombre_completo_token"))
+        telemercaderista_val = row.get("empleada_telemercaderista", row.get("lo_atendera_raw"))
         dia_rec = str(row["recogerle_dia"]) if pd.notna(row.get("recogerle_dia")) else "Ruta diaria"
         registros_salida.append({
             "cod": str(row["cod"]) if pd.notna(row["cod"]) else str(row["id_benefactor"]),
             "trato": str(row["trato_raw"]) if pd.notna(row["trato_raw"]) else "Benefactor(a)",
-            "benefactor_token": str(row["nombre_completo_token"]) if pd.notna(row["nombre_completo_token"]) else "SIN_TOKEN",
+            "benefactor_token": str(donante_val) if pd.notna(donante_val) else "SIN_TOKEN",
             "municipio": str(row["municipio_raw"]) if pd.notna(row["municipio_raw"]) else "Por confirmar",
             "barrio_token": str(row["barrio_token"]) if pd.notna(row["barrio_token"]) else "SIN_BARRIO",
             "direccion_token": str(row["direccion_token"]) if pd.notna(row["direccion_token"]) else "POR_CONFIRMAR_DIR",
@@ -316,7 +321,7 @@ def ejecutar_batch_mensajero(
             "dia_ventana_recogida": dia_rec,
             "recibo_referencia": _extraer_ultimo_recibo(row.get("recibos_numeros", np.nan)),
             "valor_recaudo_cop": _estimar_monto_operacion_reciente(row, dt_dia_anterior),
-            "responsable_telemercadeo": str(row["lo_atendera_raw"]) if pd.notna(row["lo_atendera_raw"]) else "SIN_ASIGNAR",
+            "responsable_telemercadeo": str(telemercaderista_val) if pd.notna(telemercaderista_val) else "SIN_ASIGNAR",
             "firma_y_estado_entrega": "______________________",
         })
 

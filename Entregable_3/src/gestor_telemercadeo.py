@@ -1,150 +1,142 @@
 """
-Módulo 5: Gestión de Telemercaderistas y Control Anti-Saturación de Teléfonos Compartidos.
+Módulo 5 (Versión ultra clara):
+Coordinación de Llamadas entre TELEMERCADERISTAS (empleadas que llaman)
+y BENEFACTORES (donantes externos que reciben la llamada).
 
-Conserva a cada benefactor como persona independiente, permite incorporar nuevos usuarios
-telemercaderistas, respeta las restricciones de no contacto y coordina automáticamente
-las llamadas a números compartidos (incluyendo el caso obligatorio de Juan, Felipe, Jesús y Daniel).
+Evita por completo confundir quién es la Telemercaderista y quién es el Benefactor,
+y resuelve el caso obligatorio de los 4 hermanos (Juan, Felipe, Jesús y Daniel).
 """
 
-from __future__ import annotations
-
 from datetime import datetime, timedelta
-from typing import Optional
-
 import pandas as pd
 
 
-class GestorContactosTelemercadeo:
-    """Motor operativo de programación de contactos y prevención de saturación telefónica familiar."""
+class CoordinadorLlamadasSinSaturacion:
+    """
+    Organiza las llamadas telefónicas cumpliendo dos reglas simples:
+    1. Nunca fusiona a los benefactores aunque compartan el mismo teléfono de casa.
+    2. Evita que dos telemercaderistas llamen el mismo día al mismo teléfono familiar.
+    """
 
-    def __init__(self, df_benefactores: pd.DataFrame, dias_enfriamiento_familiar: int = 2):
-        self.df_padron = df_benefactores.copy()
-        self.dias_enfriamiento = dias_enfriamiento_familiar
-        self.telemercaderistas = sorted(
-            set(["Viviana", "Sandra", "Hna Lina", "Jorge", "Vicmar", "JD", "NSE", "Gloria Trujillo"])
-        )
-        self.agenda = []
+    def __init__(self, df_benefactores: pd.DataFrame, dias_descanso_familiar: int = 2):
+        self.df_donantes = df_benefactores.copy()
+        self.dias_descanso = dias_descanso_familiar
+        # Empleadas de la Fundación que realizan las llamadas
+        self.lista_telemercaderistas = [
+            "Viviana", "Sandra", "Hna Lina", "Jorge", "Vicmar", "JD", "NSE", "Gloria Trujillo"
+        ]
+        self.agenda_llamadas = []
 
-    def registrar_telemercaderista(self, nuevo_usuario: str) -> None:
-        nombre = nuevo_usuario.strip()
-        if nombre and nombre not in self.telemercaderistas:
-            self.telemercaderistas.append(nombre)
+    def agregar_telemercaderista(self, nombre_empleada: str) -> None:
+        """Registra una nueva empleada telemercaderista en el equipo de la Fundación."""
+        nombre = nombre_empleada.strip()
+        if nombre and nombre not in self.lista_telemercaderistas:
+            self.lista_telemercaderistas.append(nombre)
 
-    def registrar_benefactor_en_padron(
+    def agregar_benefactor_donante(
         self,
         id_benefactor: int,
         cod: int,
-        nombre: str,
-        telefono: str,
-        responsable: str,
+        nombre_donante: str,
+        telefono_hogar: str,
+        empleada_asignada: str,
         recurso_interes: str,
-        horario_canal: str,
-        restriccion: str = "NINGUNA",
+        canal_horario: str,
+        restringido: bool = False,
     ) -> None:
-        nuevo = {
+        """Agrega un donante individual sin fusionarlo con sus familiares."""
+        nuevo_donante = {
             "id_benefactor": id_benefactor,
             "cod": cod,
-            "nombre_completo_token": nombre,
-            "telefono_token": telefono,
-            "lo_atendera_raw": responsable,
+            "donante_benefactor": nombre_donante,
+            "telefono_token": telefono_hogar,
+            "empleada_telemercaderista": empleada_asignada,
             "recurso_mayor_contribucion": recurso_interes,
-            "canal_preferido": horario_canal,
-            "flag_restriccion_no_contacto": restriccion != "NINGUNA",
-            "motivo_restriccion_contacto": restriccion,
+            "canal_preferido": canal_horario,
+            "flag_restriccion_no_contacto": restringido,
             "fecha_ultimo_aporte": pd.Timestamp("2026-09-15"),
         }
-        self.df_padron = pd.concat([self.df_padron, pd.DataFrame([nuevo])], ignore_index=True)
-        freq = self.df_padron["telefono_token"].value_counts(dropna=True)
-        self.df_padron["personas_en_telefono"] = self.df_padron["telefono_token"].map(freq).fillna(0).astype(int)
-        self.df_padron["flag_telefono_compartido"] = self.df_padron["personas_en_telefono"] > 1
+        self.df_donantes = pd.concat([self.df_donantes, pd.DataFrame([nuevo_donante])], ignore_index=True)
+        conteo = self.df_donantes["telefono_token"].value_counts(dropna=True)
+        self.df_donantes["personas_en_telefono"] = self.df_donantes["telefono_token"].map(conteo).fillna(0).astype(int)
+        self.df_donantes["flag_telefono_compartido"] = self.df_donantes["personas_en_telefono"] > 1
 
-    def programar_contacto(
+    def programar_llamada(
         self,
         id_benefactor: int,
-        responsable: str,
-        fecha_programada: str,
-        recurso_gestionar: str,
-        preferencias_horario_canal: Optional[str] = None,
-        auto_reprogramar_si_colision: bool = True,
+        empleada_telemercaderista: str,
+        fecha_deseada: str,
+        recurso_ofrecer: str,
+        canal_horario: str = None,
     ) -> dict:
-        fila = self.df_padron[self.df_padron["id_benefactor"] == id_benefactor]
-        if fila.empty:
-            raise ValueError(f"No existe id_benefactor={id_benefactor}")
-        b = fila.iloc[0]
-        tel = str(b["telefono_token"])
-        nombre = str(b["nombre_completo_token"])
-        pref = preferencias_horario_canal or str(b.get("canal_preferido", "Llamada / Mañana"))
-        ult_contacto = str(b.get("fecha_ultimo_aporte", "Sin contacto previo"))[:10]
+        """Verifica restricciones y teléfonos ocupados antes de agendar una llamada."""
+        donante = self.df_donantes[self.df_donantes["id_benefactor"] == id_benefactor].iloc[0]
+        nombre_donante = str(donante["donante_benefactor"])
+        telefono = str(donante["telefono_token"])
+        preferencia = canal_horario or str(donante.get("canal_preferido", "Llamada / Mañana"))
+        ult_aporte = str(donante.get("fecha_ultimo_aporte", "Sin dato"))[:10]
 
-        if bool(b.get("flag_restriccion_no_contacto", False)):
-            reg = {
-                "id_gestion": len(self.agenda) + 1,
-                "responsable_gestion": responsable,
-                "fecha_programada": fecha_programada,
-                "recurso_que_se_desea_gestionar": recurso_gestionar,
+        # Regla 1: Respetar si el donante pidió NO ser llamado
+        if bool(donante.get("flag_restriccion_no_contacto", False)):
+            cita = {
+                "id_cita": len(self.agenda_llamadas) + 1,
+                "empleada_telemercaderista_que_llama": empleada_telemercaderista,
+                "donante_benefactor_que_recibe": nombre_donante,
                 "id_benefactor": id_benefactor,
-                "benefactor_asignado": nombre,
-                "telefono_token": tel,
-                "telefono_compartido": bool(b.get("flag_telefono_compartido", False)),
-                "personas_en_telefono": int(b.get("personas_en_telefono", 1)),
-                "ultimo_contacto_realizado": ult_contacto,
-                "resultado_gestion": "BLOQUEADO_POR_RESTRICCION",
-                "proxima_accion": "No contactar (Respetar solicitud de exclusión)",
-                "preferencias_horario_canal": pref,
-                "restricciones_contacto": str(b.get("motivo_restriccion_contacto", "NO_LLAMAR")),
+                "telefono_del_hogar": telefono,
+                "recurso_que_ofrece": recurso_ofrecer,
+                "fecha_solicitada": fecha_deseada,
+                "fecha_final_agendada": "NO_AGENDADA",
+                "estado_llamada": "BLOQUEADO_NO_CONTACTO",
+                "explicacion": "El benefactor tiene restricción activa de no contacto.",
+                "canal_y_horario": preferencia,
+                "ultimo_aporte": ult_aporte,
             }
-            self.agenda.append(reg)
-            return reg
+            self.agenda_llamadas.append(cita)
+            return cita
 
-        contactos_mismo_tel = [
-            g for g in self.agenda
-            if g["telefono_token"] == tel and g["resultado_gestion"] in ["PROGRAMADO", "PENDIENTE"]
-        ]
-        fechas_ocupadas = {g["fecha_programada"]: g for g in contactos_mismo_tel}
-
-        if fecha_programada not in fechas_ocupadas:
-            estado = "PROGRAMADO"
-            prox_accion = f"Realizar contacto el {fecha_programada} ({pref})"
-            fecha_final = fecha_programada
-        else:
-            colision = fechas_ocupadas[fecha_programada]
-            if auto_reprogramar_si_colision:
-                dt_base = datetime.strptime(fecha_programada, "%Y-%m-%d")
-                while dt_base.strftime("%Y-%m-%d") in fechas_ocupadas:
-                    dt_base += timedelta(days=self.dias_enfriamiento)
-                fecha_final = dt_base.strftime("%Y-%m-%d")
-                estado = "PROGRAMADO"
-                prox_accion = (
-                    f"REPROGRAMADO ANTI-SATURACIÓN (de {fecha_programada} a {fecha_final}): "
-                    f"teléfono ya reservado el {fecha_programada} por {colision['responsable_gestion']} "
-                    f"para {colision['benefactor_asignado']} ({colision['recurso_que_se_desea_gestionar']})."
-                )
-            else:
-                fecha_final = fecha_programada
-                estado = "BLOQUEADO_SATURACION_FAMILIAR"
-                prox_accion = (
-                    f"Colisión con gestión de {colision['responsable_gestion']} "
-                    f"para {colision['benefactor_asignado']} en la misma fecha."
-                )
-
-        reg = {
-            "id_gestion": len(self.agenda) + 1,
-            "responsable_gestion": responsable,
-            "fecha_programada": fecha_final,
-            "recurso_que_se_desea_gestionar": recurso_gestionar,
-            "id_benefactor": id_benefactor,
-            "benefactor_asignado": nombre,
-            "telefono_token": tel,
-            "telefono_compartido": bool(b.get("flag_telefono_compartido", False)),
-            "personas_en_telefono": int(b.get("personas_en_telefono", 1)),
-            "ultimo_contacto_realizado": ult_contacto,
-            "resultado_gestion": estado,
-            "proxima_accion": prox_accion,
-            "preferencias_horario_canal": pref,
-            "restricciones_contacto": "NINGUNA",
+        # Regla 2: Revisar si ese teléfono ya está ocupado ese día por otra llamada
+        fechas_ocupadas = {
+            c["fecha_final_agendada"]: c
+            for c in self.agenda_llamadas
+            if c["telefono_del_hogar"] == telefono and c["estado_llamada"] == "PROGRAMADO"
         }
-        self.agenda.append(reg)
-        return reg
 
-    def obtener_agenda_df(self) -> pd.DataFrame:
-        return pd.DataFrame(self.agenda)
+        if fecha_deseada not in fechas_ocupadas:
+            fecha_final = fecha_deseada
+            explicacion = "Teléfono libre en la fecha solicitada (aprobado)."
+        else:
+            cita_previa = fechas_ocupadas[fecha_deseada]
+            fecha_cursor = datetime.strptime(fecha_deseada, "%Y-%m-%d")
+            while fecha_cursor.strftime("%Y-%m-%d") in fechas_ocupadas:
+                fecha_cursor += timedelta(days=self.dias_descanso)
+            fecha_final = fecha_cursor.strftime("%Y-%m-%d")
+            explicacion = (
+                f"Reprogramado +{self.dias_descanso} días: el {fecha_deseada} ya llama "
+                f"{cita_previa['empleada_telemercaderista_que_llama']} a su familiar "
+                f"{cita_previa['donante_benefactor_que_recibe']}."
+            )
+
+        cita = {
+            "id_cita": len(self.agenda_llamadas) + 1,
+            "empleada_telemercaderista_que_llama": empleada_telemercaderista,
+            "donante_benefactor_que_recibe": nombre_donante,
+            "id_benefactor": id_benefactor,
+            "telefono_del_hogar": telefono,
+            "recurso_que_ofrece": recurso_ofrecer,
+            "fecha_solicitada": fecha_deseada,
+            "fecha_final_agendada": fecha_final,
+            "estado_llamada": "PROGRAMADO",
+            "explicacion": explicacion,
+            "canal_y_horario": preferencia,
+            "ultimo_aporte": ult_aporte,
+        }
+        self.agenda_llamadas.append(cita)
+        return cita
+
+    def ver_tabla_agenda(self) -> pd.DataFrame:
+        return pd.DataFrame(self.agenda_llamadas)
+
+
+# Alias de compatibilidad
+GestorContactosTelemercadeo = CoordinadorLlamadasSinSaturacion
