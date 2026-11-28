@@ -104,6 +104,7 @@ def mapear_esquema_dinamico(columnas_crudas: list):
         ("ALCANCIA", "alcancia_raw"),
         ("BONO 20", "bono_2026_raw"),
         ("CANTARILLA", "cantarilla_2026_raw"),
+        ("RIFA DE VIRGEN", "rifa_virgen_carmen_raw"),
         ("VIRGEN DEL CARME", "rifa_virgen_carmen_raw"),
         ("CUOTA", "cuota_raw"),
         ("ULT PAGO", "ult_pago_raw"),
